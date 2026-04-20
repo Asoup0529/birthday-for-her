@@ -16,7 +16,6 @@ body {
   overflow: hidden;
 }
 
-/* 共用頁面 */
 .page {
   width: 100vw;
   height: 100vh;
@@ -35,33 +34,83 @@ body {
   z-index: 2;
 }
 
+#page1.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* 第二頁 */
 #page2 {
   background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  text-align: center;
-  color: white;
-  padding: 20px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 1.2s ease;
   z-index: 1;
   position: relative;
+  padding: 30px;
 }
 
-/* 顯示第二頁 */
 #page2.show {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* 隱藏第一頁 */
-#page1.hide {
+/* 第二頁內容 */
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 1000px;
+  z-index: 2;
+}
+
+/* 左邊圖片 */
+.left-image img {
+  width: 320px;
+  max-width: 40vw;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  animation: floatPhoto 3s ease-in-out infinite;
+}
+
+/* 右邊文字 */
+.right-text {
+  color: white;
+  max-width: 420px;
+  text-align: left;
+}
+
+.right-text h1 {
+  font-size: 42px;
+  margin-bottom: 20px;
   opacity: 0;
-  pointer-events: none;
+  transform: translateY(20px);
+  animation: fadeUp 1.2s ease forwards;
+  animation-delay: 0.5s;
+}
+
+.right-text p {
+  font-size: 20px;
+  line-height: 2;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1.5s ease forwards;
+  animation-delay: 1.1s;
+}
+
+.right-text .signature {
+  margin-top: 20px;
+  font-size: 18px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1.5s ease forwards;
+  animation-delay: 1.7s;
 }
 
 /* 按鈕 */
@@ -77,36 +126,10 @@ button {
   animation: pulse 1.8s infinite;
 }
 
-button:hover {
-  transform: scale(1.05);
-}
-
 @keyframes pulse {
   0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0.4); }
   50% { transform: scale(1.08); box-shadow: 0 0 25px rgba(255,255,255,0.7); }
   100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0.4); }
-}
-
-/* 第二頁圖片區 */
-.photos {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-  z-index: 2;
-}
-
-.photos img {
-  width: 160px;
-  max-width: 38vw;
-  border-radius: 18px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.2);
-  animation: floatPhoto 3s ease-in-out infinite;
-}
-
-.photos img:nth-child(2) {
-  animation-delay: 1s;
 }
 
 @keyframes floatPhoto {
@@ -115,31 +138,14 @@ button:hover {
   100% { transform: translateY(0px); }
 }
 
-h1 {
-  font-size: 40px;
-  margin: 10px 0;
-  z-index: 2;
-}
-
-p {
-  font-size: 18px;
-  line-height: 1.9;
-  max-width: 700px;
-  z-index: 2;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeText 1.5s ease forwards;
-  animation-delay: 0.8s;
-}
-
-@keyframes fadeText {
+@keyframes fadeUp {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* 愛心 */
+/* 愛心背景 */
 .heart {
   position: absolute;
   width: 20px;
@@ -181,30 +187,35 @@ p {
   }
 }
 
-/* 小字 */
-.tip {
-  margin-top: 12px;
-  font-size: 14px;
-  opacity: 0.9;
-}
-
 /* 手機版 */
-@media (max-width: 480px) {
-  h1 {
-    font-size: 32px;
+@media (max-width: 768px) {
+  #page2 {
+    padding: 20px;
   }
 
-  p {
-    font-size: 16px;
+  .content {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
   }
 
-  .photos img {
-    width: 140px;
+  .left-image img {
+    width: 240px;
+    max-width: 75vw;
   }
 
-  button {
-    font-size: 16px;
-    padding: 12px 24px;
+  .right-text {
+    text-align: center;
+    max-width: 90%;
+  }
+
+  .right-text h1 {
+    font-size: 34px;
+  }
+
+  .right-text p {
+    font-size: 17px;
+    line-height: 1.8;
   }
 }
 </style>
@@ -219,20 +230,22 @@ p {
 
 <!-- 第二頁 -->
 <div id="page2" class="page">
-  <div class="photos">
-    <img src="photo.jpg" alt="照片1">
+  <div class="content">
+    <div class="left-image">
+      <img src="photo.jpg" alt="照片">
+    </div>
+
+    <div class="right-text">
+      <h1>生日快樂 ❤️</h1>
+      <p>
+        謝謝妳出現在我的生命裡 💕<br>
+        有妳的每一天都變得特別又幸福。<br>
+        希望妳每天都開開心心，<br>
+        也希望未來每一個重要時刻都有我陪妳一起度過。
+      </p>
+      <div class="signature">給最可愛的妳 ✨</div>
+    </div>
   </div>
-
-  <h1>生日快樂 ❤️</h1>
-
-  <p>
-    謝謝妳出現在我的生命裡 💕<br>
-    有妳的每一天都變得特別又幸福。<br>
-    希望妳每天都開開心心，<br>
-    也希望未來每一個重要時刻都有我陪妳一起度過。
-  </p>
-
-  <div class="tip">給最可愛的妳 ✨</div>
 </div>
 
 <audio id="bgm" loop>
