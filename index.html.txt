@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>給最愛的妳 ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  overflow: hidden;
+  text-align: center;
+  color: white;
+}
+
+.container {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+h1 {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 1.8;
+  padding: 0 20px;
+}
+
+button {
+  margin-top: 25px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 999px;
+  background: white;
+  color: #ff4f81;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#loveMsg {
+  margin-top: 20px;
+  font-size: 22px;
+  display: none;
+}
+
+/* 愛心動畫 */
+.heart {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: red;
+  transform: rotate(45deg);
+  animation: float 5s linear infinite;
+}
+
+.heart::before,
+.heart::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: red;
+  border-radius: 50%;
+}
+
+.heart::before {
+  top: -10px;
+  left: 0;
+}
+
+.heart::after {
+  left: -10px;
+  top: 0;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-10vh) rotate(45deg);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🎂 生日快樂 ❤️</h1>
+  <h2>給我最愛的寶貝</h2>
+
+  <p>
+    謝謝妳出現在我的世界裡 💕<br>
+    有妳的每一天都變得特別有意義<br>
+    希望未來的每個生日，我都能陪在妳身邊
+  </p>
+
+  <button onclick="showLove()">點我一下 💌</button>
+  <div id="loveMsg">我真的很愛妳 ❤️</div>
+</div>
+
+<script>
+function showLove() {
+  document.getElementById("loveMsg").style.display = "block";
+}
+
+/* 產生愛心 */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 5000);
+}, 300);
+</script>
+
+</body>
+</html>
