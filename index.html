@@ -255,19 +255,30 @@
 
     .letter-paper {
       width: min(760px, 90vw);
-      min-height: 340px;
+      max-height: 70vh;
       background: rgba(255,255,255,0.92);
       border-radius: 24px;
       box-shadow: 0 16px 36px rgba(0,0,0,0.16);
       padding: 32px 28px;
       display: none;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
     .letter-paper.show {
       display: block;
       animation: fadeUp 1s ease forwards;
+    }
+
+    .letter-paper::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .letter-paper::-webkit-scrollbar-thumb {
+      background: rgba(255, 100, 140, 0.5);
+      border-radius: 10px;
     }
 
     .letter-paper::before {
@@ -296,6 +307,7 @@
       line-height: 1.95;
       min-height: 220px;
       white-space: pre-line;
+      padding-bottom: 10px;
     }
 
     .letter-sign {
@@ -305,6 +317,7 @@
       color: #c05c7b;
       font-size: 18px;
       text-align: right;
+      padding-bottom: 8px;
     }
 
     /* 第四頁：彩蛋+互動 */
@@ -628,10 +641,10 @@
   <script>
     const gameTexts = ["范", "筱", "萱", "生", "日", "快", "樂", "❤️"];
     let currentIndex = 0;
-    let heartsStarted = false;
 
     let memoryIndex = 0;
     let letterOpened = false;
+    let heartIntervals = {};
 
     const letterMessage =
 `今天是交往的第649天。
@@ -704,8 +717,16 @@
       });
     }
 
+    function stopAllHearts() {
+      Object.values(heartIntervals).forEach(id => clearInterval(id));
+      heartIntervals = {};
+      document.querySelectorAll(".heart").forEach(h => h.remove());
+    }
+
     function goPage2() {
       hideAllPages();
+      stopAllHearts();
+
       const page2 = document.getElementById("page2");
       page2.style.display = "flex";
       page2.classList.add("show");
@@ -758,9 +779,12 @@
 
     function goPage3() {
       hideAllPages();
+      stopAllHearts();
+
       const page3 = document.getElementById("page3");
       page3.style.display = "flex";
       page3.classList.add("show");
+
       startHearts("page3");
     }
 
@@ -777,17 +801,30 @@
 
       setTimeout(() => {
         letterPaper.classList.add("show");
+
         typeWriterEffect(letterText, letterMessage, 40, () => {
-          toPage4Btn.style.display = "inline-block";
+          setTimeout(() => {
+            letterPaper.scrollTo({
+              top: letterPaper.scrollHeight,
+              behavior: "smooth"
+            });
+
+            setTimeout(() => {
+              toPage4Btn.style.display = "inline-block";
+            }, 1200);
+          }, 500);
         });
       }, 900);
     }
 
     function goPage4() {
       hideAllPages();
+      stopAllHearts();
+
       const page4 = document.getElementById("page4");
       page4.style.display = "flex";
       page4.classList.add("show");
+
       startHearts("page4");
     }
 
@@ -826,6 +863,9 @@
         element.innerHTML = currentText + '<span class="cursor">|</span>';
         i++;
 
+        const letterPaper = document.getElementById("letterPaper");
+        letterPaper.scrollTop = letterPaper.scrollHeight;
+
         if (i >= text.length) {
           clearInterval(timer);
           element.innerHTML = text.replace(/\n/g, "<br>");
@@ -835,16 +875,16 @@
     }
 
     function startHearts(targetId) {
-      if (heartsStarted) return;
-      heartsStarted = true;
+      if (heartIntervals[targetId]) return;
 
-      setInterval(() => {
+      const targetPage = document.getElementById(targetId) || document.body;
+
+      heartIntervals[targetId] = setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.style.left = Math.random() * 100 + "vw";
         heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
 
-        const targetPage = document.getElementById(targetId) || document.body;
         targetPage.appendChild(heart);
 
         setTimeout(() => {
