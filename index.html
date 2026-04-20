@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>給最愛的妳 ❤️</title>
-
   <style>
     * {
       box-sizing: border-box;
@@ -22,12 +21,17 @@
       inset: 0;
       width: 100vw;
       height: 100vh;
+      display: none;
+    }
+
+    .page.show {
+      display: flex;
     }
 
     /* 第一頁 */
     #page1 {
       background: url("cover.jpg") center/cover no-repeat;
-      z-index: 2;
+      z-index: 10;
     }
 
     #button-game {
@@ -65,12 +69,12 @@
       transform: scale(1.06);
     }
 
-    /* 第二頁 */
+    /* 第二頁：回憶頁 */
     #page2 {
-      display: none;
-      z-index: 3;
+      z-index: 20;
       opacity: 0;
-      position: relative;
+      align-items: center;
+      justify-content: center;
       background:
         radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18) 0 2px, transparent 3px),
         radial-gradient(circle at 80% 30%, rgba(255,255,255,0.14) 0 1.5px, transparent 3px),
@@ -78,124 +82,322 @@
         radial-gradient(circle at 30% 80%, rgba(255,255,255,0.12) 0 1.5px, transparent 3px),
         linear-gradient(135deg, #ff9a9e, #fad0c4);
       overflow: hidden;
+      flex-direction: column;
+      padding: 24px;
     }
 
     #page2.show {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      animation: pageFadeIn 2.2s ease forwards;
+      animation: pageFadeIn 1.6s ease forwards;
     }
 
-    /* 星星閃爍層 */
-    .stars,
-    .stars2 {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .stars::before,
-    .stars2::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.9), transparent),
-        radial-gradient(2px 2px at 25% 70%, rgba(255,255,255,0.8), transparent),
-        radial-gradient(1.5px 1.5px at 40% 35%, rgba(255,255,255,0.85), transparent),
-        radial-gradient(2px 2px at 55% 80%, rgba(255,255,255,0.8), transparent),
-        radial-gradient(1.5px 1.5px at 70% 25%, rgba(255,255,255,0.85), transparent),
-        radial-gradient(2px 2px at 85% 60%, rgba(255,255,255,0.9), transparent),
-        radial-gradient(1.5px 1.5px at 92% 18%, rgba(255,255,255,0.85), transparent);
-      animation: twinkle 3s infinite alternate;
-    }
-
-    .stars2::before {
-      animation-duration: 5s;
-      opacity: 0.6;
-    }
-
-    .content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 48px;
-      width: 100%;
-      max-width: 1100px;
-      padding: 30px;
+    .memories-wrap {
+      width: min(1000px, 92vw);
+      text-align: center;
+      color: white;
       position: relative;
       z-index: 2;
     }
 
-    /* 左圖 */
-    .left-image {
-      flex: 0 0 auto;
+    .memories-title {
+      font-size: 40px;
+      margin: 0 0 18px 0;
+      text-shadow: 0 3px 10px rgba(0,0,0,0.18);
     }
 
-    .left-image img {
-      width: 340px;
-      max-width: 40vw;
+    .memory-card {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeUp 1s ease forwards;
+    }
+
+    .memory-card.active {
+      display: flex;
+    }
+
+    .memory-card img {
+      width: min(420px, 78vw);
+      max-height: 52vh;
+      object-fit: cover;
       border-radius: 24px;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
-      opacity: 0;
-      filter: blur(12px);
-      transform: scale(0.9);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.22);
+      margin-bottom: 20px;
     }
 
-    .left-image img.show-image {
-      animation: imageReveal 2.2s ease-in-out forwards, floatPhoto 3s ease-in-out 2.2s infinite;
+    .memory-caption {
+      font-size: 22px;
+      line-height: 1.8;
+      max-width: 760px;
+      min-height: 80px;
+      padding: 0 16px;
     }
 
-    /* 右字 */
-    .right-text {
-      color: white;
-      max-width: 460px;
-      text-align: left;
-    }
-
-    .right-text h1 {
-      font-size: 42px;
-      margin: 0 0 20px 0;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    .right-text h1.show-title {
-      animation: fadeUp 1.6s ease forwards;
-    }
-
-    .typewriter-box {
-      min-height: 180px;
-      font-size: 20px;
-      line-height: 2;
-      white-space: pre-line;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    .typewriter-box.show-text {
-      animation: fadeUp 1.8s ease forwards;
-    }
-
-    .signature {
+    .memory-controls {
       margin-top: 20px;
-      font-size: 18px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .soft-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      color: #ff4f81;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    }
+
+    .dots {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.45);
+    }
+
+    .dot.active {
+      background: rgba(255,255,255,0.95);
+    }
+
+    /* 第三頁：情書解鎖 */
+    #page3 {
+      z-index: 30;
       opacity: 0;
-      transform: translateY(20px);
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #f7b7c3, #f9d7c4, #fff0e7);
+      padding: 24px;
+      overflow: hidden;
+      flex-direction: column;
     }
 
-    .signature.show-signature {
-      animation: fadeUp 1.6s ease forwards;
+    #page3.show {
+      animation: pageFadeIn 1.2s ease forwards;
     }
 
-    .cursor {
-      display: inline-block;
-      margin-left: 2px;
-      animation: blink 0.8s infinite;
+    .letter-stage {
+      width: min(980px, 94vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      z-index: 2;
     }
 
-    /* 愛心 */
+    .letter-intro {
+      font-size: 34px;
+      color: #fff;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      text-align: center;
+      margin: 0;
+    }
+
+    .envelope {
+      width: min(340px, 72vw);
+      height: 220px;
+      position: relative;
+      cursor: pointer;
+      perspective: 1000px;
+    }
+
+    .envelope-body {
+      position: absolute;
+      inset: 0;
+      background: #fff5f7;
+      border-radius: 12px;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 120px;
+      background: #ffd6df;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top;
+      transition: transform 1s ease;
+      z-index: 3;
+    }
+
+    .envelope.open .envelope-flap {
+      transform: rotateX(180deg);
+    }
+
+    .envelope-front {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #ffe7ee, #fff7fa);
+      border-radius: 12px;
+      z-index: 2;
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      padding-bottom: 24px;
+      font-size: 26px;
+      color: #ff6e95;
+      font-weight: bold;
+    }
+
+    .letter-paper {
+      width: min(760px, 90vw);
+      min-height: 340px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 24px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.16);
+      padding: 32px 28px;
+      display: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .letter-paper.show {
+      display: block;
+      animation: fadeUp 1s ease forwards;
+    }
+
+    .letter-paper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("letter-photo.jpg") center/cover no-repeat;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    .letter-paper h2 {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 18px 0;
+      color: #ff6e95;
+      font-size: 34px;
+      text-align: center;
+    }
+
+    .letter-text {
+      position: relative;
+      z-index: 1;
+      color: #6b4b57;
+      font-size: 20px;
+      line-height: 1.95;
+      min-height: 220px;
+      white-space: pre-line;
+    }
+
+    .letter-sign {
+      position: relative;
+      z-index: 1;
+      margin-top: 18px;
+      color: #c05c7b;
+      font-size: 18px;
+      text-align: right;
+    }
+
+    /* 第四頁：彩蛋+互動 */
+    #page4 {
+      z-index: 40;
+      opacity: 0;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffc1d6, #ffe5ef, #fff6fb);
+      overflow: hidden;
+      flex-direction: column;
+      padding: 24px;
+    }
+
+    #page4.show {
+      animation: pageFadeIn 1.2s ease forwards;
+    }
+
+    .easter-wrap {
+      width: min(900px, 94vw);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .easter-title {
+      font-size: 40px;
+      color: #ff5e8a;
+      margin: 0 0 18px 0;
+    }
+
+    .easter-sub {
+      font-size: 22px;
+      color: #9d5b6f;
+      margin: 0 0 26px 0;
+      line-height: 1.8;
+    }
+
+    .choice-area {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      position: relative;
+      min-height: 130px;
+    }
+
+    .like-btn, .no-btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 999px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+    }
+
+    .like-btn {
+      background: #ff5e8a;
+      color: white;
+    }
+
+    .no-btn {
+      background: white;
+      color: #ff5e8a;
+      position: relative;
+    }
+
+    .final-love {
+      margin-top: 28px;
+      font-size: 34px;
+      color: #ff4d80;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .final-love.show {
+      animation: fadeUp 1.2s ease forwards;
+    }
+
+    .small-note {
+      margin-top: 14px;
+      font-size: 18px;
+      color: #9d5b6f;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .small-note.show {
+      animation: fadeUp 1.2s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    /* 裝飾 */
     .heart {
       position: absolute;
       width: 20px;
@@ -226,6 +428,12 @@
       top: 0;
     }
 
+    .cursor {
+      display: inline-block;
+      margin-left: 2px;
+      animation: blink 0.8s infinite;
+    }
+
     @keyframes pageFadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -234,31 +442,12 @@
     @keyframes fadeUp {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(18px);
       }
       to {
         opacity: 1;
         transform: translateY(0);
       }
-    }
-
-    @keyframes imageReveal {
-      from {
-        opacity: 0;
-        filter: blur(12px);
-        transform: scale(0.9);
-      }
-      to {
-        opacity: 1;
-        filter: blur(0);
-        transform: scale(1);
-      }
-    }
-
-    @keyframes floatPhoto {
-      0% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-8px) scale(1.01); }
-      100% { transform: translateY(0px) scale(1); }
     }
 
     @keyframes floatHeart {
@@ -299,41 +488,29 @@
     }
 
     @keyframes blink {
-      50% {
-        opacity: 0;
-      }
-    }
-
-    @keyframes twinkle {
-      from { opacity: 0.45; }
-      to { opacity: 1; }
+      50% { opacity: 0; }
     }
 
     @media (max-width: 768px) {
-      .content {
-        flex-direction: column;
-        gap: 24px;
-        text-align: center;
+      .memories-title,
+      .easter-title,
+      .letter-intro {
+        font-size: 30px;
       }
 
-      .left-image img {
-        width: 240px;
-        max-width: 75vw;
-      }
-
-      .right-text {
-        text-align: center;
-        max-width: 90%;
-      }
-
-      .right-text h1 {
-        font-size: 34px;
-      }
-
-      .typewriter-box {
-        font-size: 17px;
+      .memory-caption,
+      .letter-text,
+      .easter-sub {
+        font-size: 18px;
         line-height: 1.8;
-        min-height: 150px;
+      }
+
+      .letter-paper h2 {
+        font-size: 28px;
+      }
+
+      .final-love {
+        font-size: 28px;
       }
 
       .game-btn {
@@ -344,28 +521,99 @@
     }
   </style>
 </head>
-
 <body>
-  <div id="page1" class="page">
+  <!-- 第一頁 -->
+  <div id="page1" class="page show">
     <div id="button-game">
       <button id="startBtn" class="game-btn" onclick="startGame()">點我一下 💖</button>
     </div>
   </div>
 
+  <!-- 第二頁 -->
   <div id="page2" class="page">
-    <div class="stars"></div>
-    <div class="stars2"></div>
+    <div class="memories-wrap">
+      <h1 class="memories-title">我們的回憶 ❤️</h1>
 
-    <div class="content">
-      <div class="left-image">
-        <img id="mainPhoto" src="photo.jpg" alt="照片">
+      <div class="memory-card active">
+        <img src="memory1.jpg" alt="回憶1">
+        <div class="memory-caption">這一天開始，我覺得世界突然變得特別可愛。</div>
       </div>
 
-      <div class="right-text">
-        <h1 id="title">生日快樂 ❤️</h1>
-        <div id="typewriter" class="typewriter-box"></div>
-        <div id="signature" class="signature">給最可愛的妳 ✨</div>
+      <div class="memory-card">
+        <img src="memory2.jpg" alt="回憶2">
+        <div class="memory-caption">和妳待在一起的時候，時間總是過得特別快。</div>
       </div>
+
+      <div class="memory-card">
+        <img src="memory3.jpg" alt="回憶3">
+        <div class="memory-caption">謝謝妳把平凡的日子，變成值得收藏的回憶。</div>
+      </div>
+
+      <div class="memory-card">
+        <img src="memory4.jpg" alt="回憶4">
+        <div class="memory-caption">每一次看著妳笑，我都會覺得自己很幸福。</div>
+      </div>
+
+      <div class="memory-card">
+        <img src="memory5.jpg" alt="回憶5">
+        <div class="memory-caption">有些瞬間我一直記得，因為那時候身邊的人是妳。</div>
+      </div>
+
+      <div class="memory-card">
+        <img src="memory6.jpg" alt="回憶6">
+        <div class="memory-caption">希望以後還有更多更多張照片，記錄我們一起走過的日子。</div>
+      </div>
+
+      <div class="dots" id="memoryDots"></div>
+
+      <div class="memory-controls">
+        <button class="soft-btn" onclick="prevMemory()">上一張</button>
+        <button class="soft-btn" onclick="nextMemory()">下一張</button>
+        <button class="soft-btn" onclick="goPage3()">還有一樣東西想給妳 💌</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第三頁 -->
+  <div id="page3" class="page">
+    <div class="letter-stage">
+      <h1 class="letter-intro">這封信，只想給妳看 💌</h1>
+
+      <div class="envelope" id="envelope" onclick="openLetter()">
+        <div class="envelope-body"></div>
+        <div class="envelope-flap"></div>
+        <div class="envelope-front">OPEN</div>
+      </div>
+
+      <div class="letter-paper" id="letterPaper">
+        <h2>給最重要的妳</h2>
+        <div class="letter-text" id="letterText"></div>
+        <div class="letter-sign" id="letterSign">永遠站在妳這邊的人 ❤️</div>
+      </div>
+
+      <button class="soft-btn" id="toPage4Btn" style="display:none;" onclick="goPage4()">
+        其實還有一個秘密… ✨
+      </button>
+    </div>
+  </div>
+
+  <!-- 第四頁 -->
+  <div id="page4" class="page">
+    <div class="easter-wrap">
+      <h1 class="easter-title">最後一個小彩蛋 🎁</h1>
+      <p class="easter-sub">
+        如果要在這世界上選一個最可愛的人，<br>
+        我一定會選妳。<br><br>
+        所以我想問妳：
+      </p>
+
+      <div class="choice-area" id="choiceArea">
+        <button class="like-btn" onclick="chooseLike()">喜歡 ❤️</button>
+        <button class="no-btn" id="runBtn" onmouseover="moveRunBtn()" onclick="moveRunBtn()">不喜歡 🙈</button>
+      </div>
+
+      <div class="final-love" id="finalLove">我也喜歡妳 ❤️</div>
+      <div class="small-note" id="finalNote">生日快樂歌送給今天最重要的妳 🎂</div>
     </div>
   </div>
 
@@ -373,16 +621,33 @@
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
+  <audio id="birthdaySong">
+    <source src="birthday.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
     const gameTexts = ["范", "筱", "萱", "生", "日", "快", "樂", "❤️"];
     let currentIndex = 0;
     let heartsStarted = false;
 
-    const message =
-`謝謝妳出現在我的生命裡 💕
-有妳的每一天都變得特別又幸福。
-希望妳每天都開開心心，
-也希望未來每一個重要時刻都有我陪妳一起度過。`;
+    let memoryIndex = 0;
+    let letterOpened = false;
+
+    const letterMessage =
+`謝謝妳來到我的生活裡。
+
+和妳在一起之後，
+我開始更期待每一天，
+也更珍惜那些看起來很普通、
+但其實因為有妳而變得很特別的瞬間。
+
+希望妳今天很開心，
+也希望未來每一個生日、
+每一個重要的日子，
+我都能陪著妳一起度過。
+
+生日快樂，
+還有，我真的很喜歡妳。`;
 
     function startGame() {
       const startBtn = document.getElementById("startBtn");
@@ -392,7 +657,7 @@
 
     function showNextButton() {
       if (currentIndex >= gameTexts.length) {
-        enterPage2();
+        goPage2();
         return;
       }
 
@@ -431,38 +696,124 @@
       return { x, y };
     }
 
-    function enterPage2() {
-      const page1 = document.getElementById("page1");
-      const page2 = document.getElementById("page2");
-      const bgm = document.getElementById("bgm");
-      const mainPhoto = document.getElementById("mainPhoto");
-      const title = document.getElementById("title");
-      const typewriterBox = document.getElementById("typewriter");
-      const signature = document.getElementById("signature");
+    function hideAllPages() {
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("show");
+        page.style.display = "none";
+      });
+    }
 
-      page1.style.display = "none";
+    function goPage2() {
+      hideAllPages();
+      const page2 = document.getElementById("page2");
+      page2.style.display = "flex";
       page2.classList.add("show");
 
-      bgm.play().catch(() => {
-        console.log("音樂播放被瀏覽器阻擋");
+      const bgm = document.getElementById("bgm");
+      bgm.play().catch(() => {});
+
+      initDots();
+      updateMemory();
+      startHearts("page2");
+    }
+
+    function initDots() {
+      const cards = document.querySelectorAll(".memory-card");
+      const dotsWrap = document.getElementById("memoryDots");
+      if (dotsWrap.children.length > 0) return;
+
+      cards.forEach((_, i) => {
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        if (i === 0) dot.classList.add("active");
+        dotsWrap.appendChild(dot);
+      });
+    }
+
+    function updateMemory() {
+      const cards = document.querySelectorAll(".memory-card");
+      const dots = document.querySelectorAll(".dot");
+
+      cards.forEach((card, i) => {
+        card.classList.toggle("active", i === memoryIndex);
       });
 
-      startHearts();
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === memoryIndex);
+      });
+    }
+
+    function nextMemory() {
+      const cards = document.querySelectorAll(".memory-card");
+      memoryIndex = (memoryIndex + 1) % cards.length;
+      updateMemory();
+    }
+
+    function prevMemory() {
+      const cards = document.querySelectorAll(".memory-card");
+      memoryIndex = (memoryIndex - 1 + cards.length) % cards.length;
+      updateMemory();
+    }
+
+    function goPage3() {
+      hideAllPages();
+      const page3 = document.getElementById("page3");
+      page3.style.display = "flex";
+      page3.classList.add("show");
+      startHearts("page3");
+    }
+
+    function openLetter() {
+      if (letterOpened) return;
+      letterOpened = true;
+
+      const envelope = document.getElementById("envelope");
+      const letterPaper = document.getElementById("letterPaper");
+      const letterText = document.getElementById("letterText");
+      const toPage4Btn = document.getElementById("toPage4Btn");
+
+      envelope.classList.add("open");
 
       setTimeout(() => {
-        mainPhoto.classList.add("show-image");
-      }, 200);
-
-      setTimeout(() => {
-        title.classList.add("show-title");
-      }, 2200);
-
-      setTimeout(() => {
-        typewriterBox.classList.add("show-text");
-        typeWriterEffect(typewriterBox, message, 55, () => {
-          signature.classList.add("show-signature");
+        letterPaper.classList.add("show");
+        typeWriterEffect(letterText, letterMessage, 40, () => {
+          toPage4Btn.style.display = "inline-block";
         });
-      }, 3000);
+      }, 900);
+    }
+
+    function goPage4() {
+      hideAllPages();
+      const page4 = document.getElementById("page4");
+      page4.style.display = "flex";
+      page4.classList.add("show");
+      startHearts("page4");
+    }
+
+    function moveRunBtn() {
+      const btn = document.getElementById("runBtn");
+      const area = document.getElementById("choiceArea");
+      const areaRect = area.getBoundingClientRect();
+
+      const maxX = Math.max(0, areaRect.width - btn.offsetWidth);
+      const maxY = 70;
+
+      btn.style.position = "absolute";
+      btn.style.left = Math.random() * maxX + "px";
+      btn.style.top = Math.random() * maxY + "px";
+    }
+
+    function chooseLike() {
+      document.getElementById("finalLove").classList.add("show");
+      document.getElementById("finalNote").classList.add("show");
+
+      const bgm = document.getElementById("bgm");
+      const birthdaySong = document.getElementById("birthdaySong");
+
+      bgm.pause();
+      bgm.currentTime = 0;
+
+      birthdaySong.play().catch(() => {});
     }
 
     function typeWriterEffect(element, text, speed, callback) {
@@ -470,8 +821,7 @@
       element.innerHTML = '<span class="cursor">|</span>';
 
       const timer = setInterval(() => {
-        const currentText = text.substring(0, i + 1)
-          .replace(/\n/g, "<br>");
+        const currentText = text.substring(0, i + 1).replace(/\n/g, "<br>");
         element.innerHTML = currentText + '<span class="cursor">|</span>';
         i++;
 
@@ -483,7 +833,7 @@
       }, speed);
     }
 
-    function startHearts() {
+    function startHearts(targetId) {
       if (heartsStarted) return;
       heartsStarted = true;
 
@@ -492,12 +842,14 @@
         heart.className = "heart";
         heart.style.left = Math.random() * 100 + "vw";
         heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
-        document.getElementById("page2").appendChild(heart);
+
+        const targetPage = document.getElementById(targetId) || document.body;
+        targetPage.appendChild(heart);
 
         setTimeout(() => {
           heart.remove();
         }, 5000);
-      }, 300);
+      }, 350);
     }
   </script>
 </body>
