@@ -31,6 +31,14 @@
       z-index: 2;
     }
 
+    .photo {
+      width: 220px;
+      max-width: 80%;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    }
+
     h1 {
       font-size: 42px;
       margin-bottom: 10px;
@@ -63,6 +71,12 @@
       margin-top: 20px;
       font-size: 22px;
       display: none;
+    }
+
+    audio {
+      margin-top: 20px;
+      width: 260px;
+      max-width: 90%;
     }
 
     .heart {
@@ -129,6 +143,8 @@
 <body>
 
   <div class="container">
+    <img src="love.jpg" alt="我們的照片" class="photo">
+
     <h1>🎂 生日快樂 ❤️</h1>
     <h2>給我最愛的寶貝</h2>
 
@@ -140,6 +156,11 @@
 
     <button onclick="showLove()">點我一下 💌</button>
     <div id="loveMsg">我真的很愛妳 ❤️</div>
+
+    <audio controls loop>
+      <source src="music.mp3" type="audio/mpeg">
+      你的瀏覽器不支援音樂播放。
+    </audio>
   </div>
 
   <script>
