@@ -180,6 +180,7 @@
       padding: 24px;
       overflow: hidden;
       flex-direction: column;
+      position: relative;
     }
 
     #page3.show {
@@ -194,6 +195,7 @@
       gap: 20px;
       position: relative;
       z-index: 2;
+      padding-bottom: 120px;
     }
 
     .letter-intro {
@@ -255,7 +257,7 @@
 
     .letter-paper {
       width: min(760px, 90vw);
-      max-height: 70vh;
+      max-height: 62vh;
       background: rgba(255,255,255,0.92);
       border-radius: 24px;
       box-shadow: 0 16px 36px rgba(0,0,0,0.16);
@@ -318,6 +320,33 @@
       font-size: 18px;
       text-align: right;
       padding-bottom: 8px;
+    }
+
+    /* 第三頁秘密按鈕：固定在較高位置 */
+    .secret-btn {
+      position: absolute;
+      bottom: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 28px;
+      border: none;
+      border-radius: 999px;
+      background: white;
+      color: #ff4f81;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.6s ease;
+      z-index: 5;
+      animation: pulse 1.8s infinite;
+    }
+
+    .secret-btn.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(-10px);
     }
 
     /* 第四頁：彩蛋+互動 */
@@ -476,15 +505,15 @@
 
     @keyframes pulse {
       0% {
-        transform: translate(-50%, -50%) scale(1);
+        transform: translate(-50%, 0) scale(1);
         box-shadow: 0 0 0 rgba(255,255,255,0.4);
       }
       50% {
-        transform: translate(-50%, -50%) scale(1.08);
+        transform: translate(-50%, 0) scale(1.06);
         box-shadow: 0 0 25px rgba(255,255,255,0.7);
       }
       100% {
-        transform: translate(-50%, -50%) scale(1);
+        transform: translate(-50%, 0) scale(1);
         box-shadow: 0 0 0 rgba(255,255,255,0.4);
       }
     }
@@ -530,6 +559,12 @@
         font-size: 20px;
         padding: 12px 22px;
         min-width: 78px;
+      }
+
+      .secret-btn {
+        bottom: 72px;
+        font-size: 16px;
+        padding: 12px 22px;
       }
     }
   </style>
@@ -603,11 +638,11 @@
         <div class="letter-text" id="letterText"></div>
         <div class="letter-sign" id="letterSign">永遠陪在妳身旁的人 ❤️</div>
       </div>
-
-      <button class="soft-btn" id="toPage4Btn" style="display:none;" onclick="goPage4()">
-        其實還有一個秘密… ✨
-      </button>
     </div>
+
+    <button id="toPage4Btn" class="secret-btn" onclick="goPage4()">
+      其實還有一個秘密… ✨
+    </button>
   </div>
 
   <!-- 第四頁 -->
@@ -785,6 +820,7 @@
       page3.style.display = "flex";
       page3.classList.add("show");
 
+      document.getElementById("toPage4Btn").classList.remove("show");
       startHearts("page3");
     }
 
@@ -810,7 +846,7 @@
             });
 
             setTimeout(() => {
-              toPage4Btn.style.display = "inline-block";
+              toPage4Btn.classList.add("show");
             }, 1200);
           }, 500);
         });
