@@ -27,11 +27,9 @@ body {
 /* 第一頁 */
 #page1 {
   background: url("cover.jpg") center/cover no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: opacity 2s ease;
+  transition: opacity 2s ease-in-out;
   z-index: 2;
+  position: relative;
 }
 
 #page1.hide {
@@ -47,7 +45,7 @@ body {
   align-items: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 2.5s ease;
+  transition: opacity 2.5s ease-in-out;
   z-index: 1;
   position: relative;
   padding: 30px;
@@ -69,7 +67,6 @@ body {
   z-index: 2;
 }
 
-/* 左邊圖片 */
 .left-image img {
   width: 320px;
   max-width: 40vw;
@@ -78,7 +75,6 @@ body {
   animation: floatPhoto 3s ease-in-out infinite;
 }
 
-/* 右邊文字 */
 .right-text {
   color: white;
   max-width: 420px;
@@ -90,8 +86,8 @@ body {
   margin-bottom: 20px;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeUp 3s ease forwards;
-  animation-delay: 1.5s;
+  animation: fadeUp 2s ease forwards;
+  animation-delay: 0.8s;
 }
 
 .right-text p {
@@ -100,8 +96,8 @@ body {
   margin: 0;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeUp 3.5s ease forwards;
-  animation-delay: 2s;
+  animation: fadeUp 2.5s ease forwards;
+  animation-delay: 1.6s;
 }
 
 .right-text .signature {
@@ -109,27 +105,62 @@ body {
   font-size: 18px;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeUp 4s ease forwards;
-  animation-delay: 3s;
+  animation: fadeUp 2.5s ease forwards;
+  animation-delay: 2.5s;
 }
 
-/* 按鈕 */
-button {
-  padding: 14px 30px;
-  font-size: 18px;
+/* 第一頁按鈕遊戲 */
+#button-game {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.game-btn {
+  position: absolute;
+  padding: 14px 28px;
+  font-size: 22px;
   border: none;
   border-radius: 999px;
-  background: rgba(255,255,255,0.95);
+  background: rgba(255, 255, 255, 0.92);
   color: #ff4f81;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.22);
+  transition: transform 0.2s ease, opacity 0.5s ease;
+  animation: popIn 0.45s ease;
+  min-width: 90px;
+}
+
+.game-btn:hover {
+  transform: scale(1.08);
+}
+
+#startBtn {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   animation: pulse 1.8s infinite;
 }
 
+#startBtn:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
 @keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0.4); }
-  50% { transform: scale(1.08); box-shadow: 0 0 25px rgba(255,255,255,0.7); }
-  100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0.4); }
+  0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 rgba(255,255,255,0.4); }
+  50% { transform: translate(-50%, -50%) scale(1.08); box-shadow: 0 0 25px rgba(255,255,255,0.7); }
+  100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 rgba(255,255,255,0.4); }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes floatPhoto {
@@ -217,6 +248,12 @@ button {
     font-size: 17px;
     line-height: 1.8;
   }
+
+  .game-btn {
+    font-size: 20px;
+    padding: 12px 22px;
+    min-width: 78px;
+  }
 }
 </style>
 </head>
@@ -225,7 +262,9 @@ button {
 
 <!-- 第一頁 -->
 <div id="page1" class="page">
-  <button onclick="startPage()">點我一下 💖</button>
+  <div id="button-game">
+    <button id="startBtn" class="game-btn" onclick="startGame()">點我一下 💖</button>
+  </div>
 </div>
 
 <!-- 第二頁 -->
@@ -253,7 +292,56 @@ button {
 </audio>
 
 <script>
-function startPage() {
+const gameTexts = ["范", "筱", "萱", "生", "日", "快", "樂", "❤️"];
+let currentIndex = 0;
+
+function startGame() {
+  const startBtn = document.getElementById("startBtn");
+  startBtn.remove();
+  showNextButton();
+}
+
+function showNextButton() {
+  if (currentIndex >= gameTexts.length) {
+    enterPage2();
+    return;
+  }
+
+  const gameArea = document.getElementById("button-game");
+  const btn = document.createElement("button");
+  btn.className = "game-btn";
+  btn.textContent = gameTexts[currentIndex];
+
+  const pos = getRandomPosition();
+  btn.style.left = pos.x + "px";
+  btn.style.top = pos.y + "px";
+
+  btn.onclick = function () {
+    btn.remove();
+    currentIndex++;
+    showNextButton();
+  };
+
+  gameArea.appendChild(btn);
+}
+
+function getRandomPosition() {
+  const page = document.getElementById("page1");
+  const pageWidth = page.clientWidth;
+  const pageHeight = page.clientHeight;
+
+  const btnWidth = window.innerWidth <= 768 ? 90 : 110;
+  const btnHeight = window.innerWidth <= 768 ? 52 : 58;
+
+  const padding = 20;
+
+  const x = Math.random() * (pageWidth - btnWidth - padding * 2) + padding;
+  const y = Math.random() * (pageHeight - btnHeight - padding * 2) + padding;
+
+  return { x, y };
+}
+
+function enterPage2() {
   const page1 = document.getElementById("page1");
   const page2 = document.getElementById("page2");
   const bgm = document.getElementById("bgm");
@@ -262,7 +350,7 @@ function startPage() {
 
   setTimeout(() => {
     page2.classList.add("show");
-  }, 700);
+  }, 1200);
 
   bgm.play().catch(() => {
     console.log("音樂播放被瀏覽器阻擋");
