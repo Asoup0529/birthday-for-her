@@ -1,185 +1,110 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>給最愛的妳 ❤️</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>給最愛的妳 ❤️</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: "Microsoft JhengHei", sans-serif;
+  overflow: hidden;
+}
 
-    body {
-      margin: 0;
-      font-family: "Microsoft JhengHei", sans-serif;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: white;
-      overflow: hidden;
-      position: relative;
-    }
+/* 共用 */
+.page {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
-    .container {
-      width: 90%;
-      max-width: 600px;
-      padding: 30px 20px;
-      z-index: 2;
-    }
+/* 畫面一 */
+#page1 {
+  background: url("cover.jpg") center/cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    .photo {
-      width: 220px;
-      max-width: 80%;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-    }
+/* 按鈕 */
+button {
+  padding: 14px 28px;
+  font-size: 18px;
+  border: none;
+  border-radius: 999px;
+  background: white;
+  color: #ff4f81;
+  cursor: pointer;
+}
 
-    h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-    }
+/* 畫面二 */
+#page2 {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  flex-direction: column;
+  padding: 20px;
+}
 
-    h2 {
-      font-size: 26px;
-      margin-bottom: 20px;
-    }
+/* 圖片二 */
+.photo {
+  width: 220px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
 
-    p {
-      font-size: 18px;
-      line-height: 1.8;
-      margin: 0;
-    }
+h1 {
+  font-size: 40px;
+}
 
-    button {
-      margin-top: 25px;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 999px;
-      background: white;
-      color: #ff4f81;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    #loveMsg {
-      margin-top: 20px;
-      font-size: 22px;
-      display: none;
-    }
-
-    audio {
-      margin-top: 20px;
-      width: 260px;
-      max-width: 90%;
-    }
-
-    .heart {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      transform: rotate(45deg);
-      animation: float 5s linear infinite;
-      z-index: 1;
-    }
-
-    .heart::before,
-    .heart::after {
-      content: "";
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      border-radius: 50%;
-    }
-
-    .heart::before {
-      top: -10px;
-      left: 0;
-    }
-
-    .heart::after {
-      left: -10px;
-      top: 0;
-    }
-
-    @keyframes float {
-      0% {
-        transform: translateY(100vh) rotate(45deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-10vh) rotate(45deg);
-        opacity: 0;
-      }
-    }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 34px;
-      }
-
-      h2 {
-        font-size: 22px;
-      }
-
-      p {
-        font-size: 16px;
-      }
-
-      #loveMsg {
-        font-size: 20px;
-      }
-    }
-  </style>
+p {
+  font-size: 18px;
+  line-height: 1.8;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="container">
-    <img src="love.jpg" alt="我們的照片" class="photo">
+<!-- 🎬 畫面一 -->
+<div id="page1" class="page">
+  <button onclick="start()">點我一下 💖</button>
+</div>
 
-    <h1>🎂 生日快樂 ❤️</h1>
-    <h2>給我最愛的寶貝</h2>
+<!-- 💖 畫面二 -->
+<div id="page2" class="page">
+  <img src="photo.jpg" class="photo">
 
-    <p>
-      謝謝妳出現在我的世界裡 💕<br>
-      有妳的每一天都變得特別有意義<br>
-      希望未來的每個生日，我都能陪在妳身邊
-    </p>
+  <h1>生日快樂 ❤️</h1>
 
-    <button onclick="showLove()">點我一下 💌</button>
-    <div id="loveMsg">我真的很愛妳 ❤️</div>
+  <p>
+    謝謝妳出現在我的生命裡 💕<br>
+    有妳的每一天都變得很特別<br>
+    希望未來每個生日都有我陪妳
+  </p>
+</div>
 
-    <audio controls loop>
-      <source src="music.mp3" type="audio/mpeg">
-      你的瀏覽器不支援音樂播放。
-    </audio>
-  </div>
+<!-- 🎵 音樂 -->
+<audio id="bgm" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
 
-  <script>
-    function showLove() {
-      document.getElementById("loveMsg").style.display = "block";
-    }
+<script>
+function start() {
+  // 切畫面
+  document.getElementById("page1").style.display = "none";
+  document.getElementById("page2").style.display = "flex";
 
-    setInterval(() => {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
-      document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 5000);
-    }, 300);
-  </script>
+  // 播放音樂
+  document.getElementById("bgm").play();
+}
+</script>
 
 </body>
 </html>
